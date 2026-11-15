@@ -11,6 +11,7 @@ import { setCheckins } from '../proactive.js';
 import { createRoom, postToRoom } from './rooms.js';
 import type { ActivityKind } from '../types.js';
 import { Cron } from 'croner';
+import { QUANT_TOOLS } from './quant-tools.js';
 
 export interface ToolCtx {
   userId: string;
@@ -29,7 +30,7 @@ export interface ToolResult {
 
 type Impl = (args: any, ctx: ToolCtx) => Promise<ToolResult>;
 
-interface ToolDef {
+export interface ToolDef {
   name: string;
   description: string;
   parameters: Record<string, unknown>;
@@ -324,6 +325,8 @@ export const TOOLS: ToolDef[] = [
     },
   },
 ];
+
+TOOLS.push(...QUANT_TOOLS);
 
 export const toolMap = new Map(TOOLS.map((t) => [t.name, t]));
 
