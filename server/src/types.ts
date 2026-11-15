@@ -8,7 +8,8 @@ export type AvatarShape =
 export type AvatarColor =
   | 'black' | 'brown' | 'red' | 'orange' | 'yellow' | 'green' | 'cyan' | 'blue' | 'violet' | 'magenta' | 'gray';
 
-export interface User { id: string; email: string; name: string; avatarUrl: string | null }
+export type UserRole = 'owner' | 'helper';
+export interface User { id: string; email: string; name: string; avatarUrl: string | null; role: UserRole }
 
 export interface Bot {
   id: string;
@@ -125,7 +126,7 @@ export type CardBody =
 
 export interface EventBody {
   type: 'event';
-  event: 'routine-created' | 'routine-updated' | 'routine-run' | 'task-changed' | 'bot-message' | 'conversation-cleared' | 'computer' | 'voice-call';
+  event: 'routine-created' | 'routine-updated' | 'routine-run' | 'task-changed' | 'bot-message' | 'conversation-cleared' | 'computer' | 'voice-call' | 'helper-run' | 'helper-share';
   text: string;
   ref?: string;
   /** voice-call only: the call record (set on the end-of-call row). */

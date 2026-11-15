@@ -28,7 +28,7 @@ export function userFromToken(t: string | undefined): User | null {
   const r = db
     .prepare('SELECT u.* FROM auth_sessions s JOIN users u ON u.id=s.user_id WHERE s.token=? AND s.expires_at>?')
     .get(t, now()) as any;
-  return r ? { id: r.id, email: r.email, name: r.name, avatarUrl: r.avatar_url } : null;
+  return r ? { id: r.id, email: r.email, name: r.name, avatarUrl: r.avatar_url, role: r.role === 'helper' ? 'helper' : 'owner' } : null;
 }
 
 export function userFromCookieHeader(cookieHeader: string | undefined): User | null {
@@ -36,9 +36,19 @@ export function userFromCookieHeader(cookieHeader: string | undefined): User | n
   return userFromToken(m ? decodeURIComponent(m.slice(COOKIE.length + 1)) : undefined);
 }
 
+/** An owner's session. Helpers are turned away from everything but their own page (requireHelper). */
 export const requireUser: MiddlewareHandler<AuthVars> = async (c, next) => {
   const u = userFromToken(getCookie(c, COOKIE));
   if (!u) return c.json({ error: 'unauthenticated' }, 401);
+  if (u.role === 'helper') return c.json({ error: 'Helpers can only use the helper page.' }, 403);
+  c.set('user', u);
+  await next();
+};
+
+export const requireHelper: MiddlewareHandler<AuthVars> = async (c, next) => {
+  const u = userFromToken(getCookie(c, COOKIE));
+  if (!u) return c.json({ error: 'unauthenticated' }, 401);
+  if (u.role !== 'helper') return c.json({ error: 'This page is for helpers.' }, 403);
   c.set('user', u);
   await next();
 };
