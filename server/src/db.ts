@@ -154,6 +154,9 @@ addColumn('bots', 'engine', 'TEXT');
 addColumn('bots', 'engine_port', 'INTEGER');
 addColumn('bots', 'handback_at', 'INTEGER');
 addColumn('screens', 'width', 'INTEGER');
+// Helpers: invited people with limited access (see helpers.ts). Owners are everyone else.
+addColumn('users', 'role', "TEXT NOT NULL DEFAULT 'owner'");
+addColumn('routines', 'helper_runnable', 'INTEGER NOT NULL DEFAULT 0');
 addColumn('screens', 'height', 'INTEGER');
 
 export const now = () => Date.now();

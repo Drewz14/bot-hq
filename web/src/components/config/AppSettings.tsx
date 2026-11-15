@@ -11,12 +11,14 @@ import { Icon } from '../Icon';
 import { ToolkitLogo } from '../ToolkitLogo';
 import { Glyph } from './glyphs';
 import { ConfirmButton } from './ui';
+import { HelpersSection } from './HelpersSection';
 
 const SECTIONS: { id: AppSection; label: string }[] = [
   { id: 'general', label: 'General' },
   { id: 'computer', label: 'Computer' },
   { id: 'permissions', label: 'Permissions' },
   { id: 'apps', label: 'Connected apps' },
+  { id: 'helpers', label: 'Helpers' },
   { id: 'account', label: 'Account' },
 ];
 
@@ -49,6 +51,7 @@ export function AppSettings() {
           {section === 'computer' && <ComputerSection />}
           {section === 'permissions' && <PermissionsSection />}
           {section === 'apps' && <AppsSection />}
+          {section === 'helpers' && <HelpersSection PageHead={PageHead} />}
           {section === 'account' && <AccountSection />}
         </div>
       </div>

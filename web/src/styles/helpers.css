@@ -1,0 +1,45 @@
+/* The helper page and Settings → Helpers. */
+
+.helper { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; color: var(--color-text-primary); }
+.helper__top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.helper__eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.4px; text-transform: uppercase; color: var(--color-text-tertiary); }
+.helper__title { margin: 4px 0 0; font-size: 28px; line-height: 34px; font-weight: 600; }
+.helper__intro { margin: 12px 0 20px; font-size: 14px; line-height: 21px; color: var(--color-text-secondary); }
+.helper__runs { margin-bottom: 12px; font-size: 13px; color: var(--color-text-tertiary); }
+.helper__project { margin-top: 28px; }
+.helper__bot { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.helper__bot-name { font-size: 17px; font-weight: 600; }
+.helper__bot-sub { font-size: 13px; color: var(--color-text-tertiary); }
+.helper__card { margin-bottom: 16px; }
+.helper__card-title { padding: 8px 10px 4px; font-size: 13px; font-weight: 600; color: var(--color-text-secondary); }
+.helper__card-title--outside { padding: 4px 0 8px; }
+.helper__note { font-size: 13px; color: var(--color-text-secondary); padding: 4px 10px 8px; }
+.helper__error { font-size: 13px; color: var(--color-danger-text); padding: 4px 0; }
+.helper__result { margin-bottom: 10px; padding: 0; overflow: hidden; }
+.helper__result-head { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: none; border: 0; cursor: pointer; text-align: left; color: inherit; font: inherit; }
+.helper__result-title { font-size: 15px; font-weight: 500; }
+.helper__result-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; font-size: 12px; color: var(--color-text-tertiary); }
+.helper__result-body { padding: 0 14px 14px; }
+.helper__md { font-size: 14px; line-height: 21px; overflow-wrap: anywhere; }
+.helper__verdicts { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 10px; }
+.helper__verdict { padding: 7px 12px; border-radius: var(--radius-full); border: 1px solid var(--color-border-secondary, var(--color-border-tertiary)); background: none; color: var(--color-text-primary); font: inherit; font-size: 13px; cursor: pointer; }
+.helper__verdict.is-on { border-color: transparent; color: #fff; }
+.helper__verdict--agree.is-on { background: var(--color-success); }
+.helper__verdict--disagree.is-on { background: var(--color-danger); }
+.helper__verdict--unsure.is-on { background: var(--color-text-tertiary); }
+.helper__textarea { width: 100%; min-height: 72px; resize: vertical; box-sizing: border-box; }
+.helper__actions { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.helper__actions .helper__note { padding: 0; }
+
+.helpers__invite { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+.helpers__bots { display: flex; flex-wrap: wrap; gap: 8px; }
+.helpers__bot { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--radius-full); border: 1px solid var(--color-border-tertiary); font-size: 13px; cursor: pointer; }
+.helpers__bot.is-on { border-color: var(--color-primary); }
+.helpers__row { display: flex; align-items: center; gap: 10px; }
+.helpers__row .helper__note { padding: 0; }
+.helpers__hint { margin: -6px 0 0; font-size: 13px; line-height: 19px; color: var(--color-text-tertiary); }
+
+@media (max-width: 560px) {
+  .helper { padding: 20px 14px 48px; }
+  .helper__result-head { flex-direction: column; align-items: flex-start; }
+}

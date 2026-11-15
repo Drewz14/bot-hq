@@ -17,6 +17,7 @@ import { runRoutine, scheduleRoutine, unscheduleRoutine } from './routines.js';
 import { deleteEventTrigger } from './triggers.js';
 import { dispatchRoomMessage } from './agent/rooms.js';
 import { voiceApi } from './voice.js';
+import { isInvitedHelper } from './helpers.js';
 import type { AvatarColor, AvatarShape, Toolkit } from './types.js';
 
 export const api = new Hono<AuthVars>();
@@ -53,6 +54,12 @@ function createBot(userId: string, b: { name: string; label?: string; descriptio
 function findOrCreateUser(email: string, name?: string, preferId?: string) {
   const existing = db.prepare('SELECT * FROM users WHERE lower(email)=lower(?)').get(email) as any;
   if (existing) return { id: existing.id as string, isNew: false };
+  // Someone a scientist invited as a helper: a limited account with no bots, even if not on ALLOWED_EMAILS.
+  if (isInvitedHelper(email)) {
+    const id = preferId ?? newId('usr');
+    db.prepare("INSERT INTO users(id,email,name,role,created_at) VALUES (?,?,?,'helper',?)").run(id, email.toLowerCase(), name ?? email.split('@')[0], now());
+    return { id, isNew: true };
+  }
   if (env.allowedEmails.length && !env.allowedEmails.includes(email.toLowerCase())) throw new UserError('This account is not allowed to sign in here.');
   const id = preferId ?? newId('usr');
   db.prepare('INSERT INTO users(id,email,name,created_at) VALUES (?,?,?,?)').run(id, email, name ?? email.split('@')[0], now());
@@ -144,7 +151,7 @@ api.post('/auth/logout', (c) => { destroySession(c); return c.json({ ok: true })
 
 // everything below requires a session
 api.use('/*', async (c, next) => {
-  if (c.req.path.startsWith('/api/auth/') || c.req.path.startsWith('/api/apps/callback') || c.req.path === '/api/health') return next();
+  if (c.req.path.startsWith('/api/auth/') || c.req.path.startsWith('/api/apps/callback') || c.req.path === '/api/health' || c.req.path.startsWith('/api/helper/')) return next();
   return requireUser(c, next);
 });
 

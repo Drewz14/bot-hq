@@ -11,6 +11,8 @@ import { setCheckins } from '../proactive.js';
 import { createRoom, postToRoom } from './rooms.js';
 import type { ActivityKind } from '../types.js';
 import { Cron } from 'croner';
+import { QUANT_TOOLS } from './quant-tools.js';
+import { HELPER_TOOLS } from './helper-tools.js';
 
 export interface ToolCtx {
   userId: string;
@@ -29,13 +31,15 @@ export interface ToolResult {
 
 type Impl = (args: any, ctx: ToolCtx) => Promise<ToolResult>;
 
-interface ToolDef {
+export interface ToolDef {
   name: string;
   description: string;
   parameters: Record<string, unknown>;
   activity: ActivityKind;
   label: string;
   impl: Impl;
+  /** Ask the owner first (an approval card), unless they chose "Always allow" for this tool. */
+  approval?: (args: any) => string;
 }
 
 const obj = (properties: Record<string, unknown>, required: string[] = []) => ({ type: 'object', properties, required, additionalProperties: false });
@@ -324,6 +328,8 @@ export const TOOLS: ToolDef[] = [
     },
   },
 ];
+
+TOOLS.push(...QUANT_TOOLS, ...HELPER_TOOLS);
 
 export const toolMap = new Map(TOOLS.map((t) => [t.name, t]));
 

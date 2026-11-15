@@ -13,6 +13,7 @@ import { SearchModal } from './components/modals/SearchModal';
 import { ConfigLayer } from './components/config/ConfigLayer';
 import { TasksView } from './components/config/TasksView';
 import { useConfigUI } from './configStore';
+import { HelperHome } from './components/helpers/HelperHome';
 
 function Shell() {
   const detailsOpen = useStore((s) => s.detailsOpen);
@@ -74,5 +75,7 @@ export function App() {
   const user = useStore((s) => s.user);
   useEffect(() => { useStore.getState().checkAuth(); }, []);
   if (!authChecked) return <div className="boot" />;
-  return user ? <Shell /> : <SignIn />;
+  if (!user) return <SignIn />;
+  // Helpers get their own page and never load the owner's app.
+  return user.role === 'helper' ? <HelperHome /> : <Shell />;
 }

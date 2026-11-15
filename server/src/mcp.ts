@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { Hono } from 'hono';
+import { db } from './db.js';
 import { getBotRow } from './store.js';
 import { composioTools } from './composio.js';
 import { mcpToken, primaryBotId } from './engine.js';
@@ -60,6 +61,18 @@ async function callTool(botId: string | null, rawName: string, args: any): Promi
   try {
     const own = toolMap.get(name);
     if (own) {
+      if (own.approval) {
+        const p = db.prepare('SELECT mode FROM policies WHERE user_id=? AND tool=?').get(userId, name) as any;
+        const mode = p?.mode ?? 'needs_approval';
+        if (mode === 'blocked') {
+          noteToolOutcome(botId, rowSeq, { status: 'denied', summary: 'Not allowed' });
+          return text(DECLINED);
+        }
+        if (mode !== 'always_allow') {
+          const answer = await requestApproval({ userId, botId }, { key: name, title: own.approval(args) }, args, rowSeq);
+          if (answer !== 'allow') return text(answer === 'deny' ? DECLINED : SKIPPED);
+        }
+      }
       const r = await own.impl(args, ctx);
       if (r.endTurn) markSilent(botId);
       noteToolOutcome(botId, rowSeq, { status: 'done', summary: r.summary });
